@@ -4,7 +4,21 @@
   "description": "Learn NPM",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prebuild:js": "mkdir -p ./dist/scripts",
+    "build:js": "browserify ./src/scripts/index.js -o ./dist/scripts/index.js",
+    "postbuild:js": "uglifyjs ./dist/scripts/index.js -o ./dist/scripts/index.min.js",
+    "prebuild:html": "mkdir -p ./dist",
+    "prebuild:css": "mkdir -p ./dist/styles",
+    "build:css": "node-sass --output-style compressed ./src/styles/index.scss > ./dist/styles/index.css",
+    "build:html": "cp ./src/index.html ./dist/index.html",
+    "build": "npm run build:html && npm run build:js && npm run build:css",
+    "preview": "npm run build",
+    "view": "http-server ./dist",
+
+    "watch:js": "onchange 'src/scripts/*.js' -- npm run build:js",
+    "watch:html": "onchange 'src/index.html' -- npm run build:html",
+    "watch:css": "onchange 'src/styles/*.scss' -- npm run build:css",
+    "watch": "npm run watch:html | npm run watch:css | npm run watch:js"
   },
   "keywords": [
     "npm",
@@ -15,5 +29,12 @@
   "license": "MIT",
   "dependencies": {
     "jquery": "^3.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.3.0",
+    "http-server": "^0.9.0",
+    "node-sass": "^4.2.0",
+    "onchange": "^3.2.1",
+    "uglify-js": "^2.7.5"
   }
 }
